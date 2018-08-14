@@ -13,7 +13,7 @@ from colorama import Fore, Back, Style
 print(Fore.RED + Style.DIM + Back.WHITE + 'All measurments are in millimeters.\nAll output is saved to backupModel.bak\n')
 print(Style.RESET_ALL)
 
-# General web structure input
+# General web structure input (Overall radius)
 while True:
     try:
         webRadius = decimal.Decimal(input("Radius of the web structure (max radius): "))
@@ -24,7 +24,7 @@ while True:
     except:
             print("Invalid input, please try again (must be a positive rational number)")
     
-# Radial thread input
+# Radial thread input (Quantity and radius)
 while True:
     try:
         radialQuantity = decimal.Decimal(input("Number of radial threads: "))
@@ -44,7 +44,7 @@ while True:
     except:
         print("Invalid input, please try again (must be a positive rational number)")
 
-# Spiral thread input
+# Spiral thread input (Quantity, radius, and spacing)
 while True:
     try:
         spiralQuantity = decimal.Decimal(input("Desired number of spiral threads: "))
@@ -134,7 +134,6 @@ spiralDistance3 = (spiralDistance + (spiralDistance / radialQuantity) / 2)
 q = 0
 w = 0 
 spiralIncrement2 = 0
-## Not necessary rn- bounding circle ## initial += str("color([0,0,0]) rotate_extrude()translate([" + str(webRadius) + ",0,0])circle(r=1);\n")
 while i < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < webRadius:
     # Determine length of the spiral thread
 
@@ -142,8 +141,9 @@ while i < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
     if q == 0:
         spiralTranslate = (spiralLength / -2)
         # q is incremented later on, no need to do it here
-    spiralLengthInitial = spiralLength
-    
+        spiralLengthInitial = spiralLength
+        previousSpiralLength = spiralLength
+
     spiralDiagonal = decimal.Decimal(math.sqrt(((spiralLength / 2) ** 2 + spiralDistance ** 2)))
     
 
@@ -170,10 +170,15 @@ while i < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
 
         spiralDiagonal2 = decimal.Decimal(spiralDiagonal) + spiralIncrement2
         spiralLength = round(math.sqrt(decimal.Decimal(spiralDiagonal ** 2) + spiralDiagonal2 ** 2 - (2 * spiralDiagonal * spiralDiagonal2 * decimal.Decimal(math.cos(math.radians(degreesInitial))))), 4)
+        
         if q == 0:
             spiralTranslate += 1 - (decimal.Decimal(spiralLength) - spiralLengthInitial) / 2
             spiralTranslate = round(spiralTranslate, 4)
             q += 1
+
+        else:
+            spiralTranslate -= ((decimal.Decimal(spiralLength)-decimal.Decimal(previousSpiralLength)) / 2)
+            spiralTranslate = round(spiralTranslate, 4)
 
         largeSideDegree = math.asin(decimal.Decimal(math.sin(math.radians(degreesInitial))) * decimal.Decimal(spiralDiagonal2) / decimal.Decimal(spiralLength))
         largeSideDegree = round(decimal.Decimal(math.degrees(largeSideDegree)), 4)
@@ -195,12 +200,9 @@ while i < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
                     degreesCalculated -= 180
                     initial += str("rotate([90,0," + str(degreesCalculated) +"])translate([" + str(spiralDistance3) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
             '''
-            spiralTranslateFactor = (2 + (1 / radialQuantity))
 
-            spiralTranslate = decimal.Decimal((spiralLength / -2))
-            spiralTranslate += 1 - (decimal.Decimal(spiralLength) - decimal.Decimal(spiralLengthInitial)) / 2
-            spiralTranslate = round(spiralTranslate, 4)
             spiralDistance3 += spiralDistanceIncrement
+            previousSpiralLength = spiralLength
             x += 1
         # degrees = (90 - spiralRotateDegrees) - degreesInitial
         spiralDiagonal = spiralDiagonal2
