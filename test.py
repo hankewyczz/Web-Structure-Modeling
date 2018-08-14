@@ -1,17 +1,18 @@
 ##############################
 ##  Zachar Hankewycz, 2018  ##
 ##############################
+
 import decimal
 import pyperclip
 import datetime
 import math
 from colorama import init
 init()
-
 # Initial user information
 from colorama import Fore, Back, Style
-print(Fore.RED + Style.DIM + Back.WHITE + 'All measurments are in millimeters.\nAll output is saved to backupModel.bak\n')
-print(Style.RESET_ALL)
+print(Fore.WHITE + Style.BRIGHT + '\n\n***********************************' + Style.RESET_ALL)
+print(Fore.RED + Style.BRIGHT + 'All measurments are in millimeters.\nAll output is saved to backupModel.bak' + Style.RESET_ALL)
+print(Fore.WHITE + Style.BRIGHT + '***********************************\n' + Style.RESET_ALL)
 
 # General web structure input (Overall radius)
 while True:
@@ -99,45 +100,46 @@ elif spiralSpacingType == "g":
         except:
             print("Invalid input, please try again (must be a positive rational number)")
 
+# Initializes the output by defining the number of fragments (quality of the model. Lower is faster, higher is more defined)
 initial = "$fn=30;\n"
-# Radial Threads
-degreesInitial = round((360 / radialQuantity), 2)
 
-j = 0
+# Creating/adding the radial threads to initial
+initialDegrees = round((360 / radialQuantity), 2)
+a = 0
 degrees = 0
-while j < radialQuantity:
+while a < radialQuantity:
         initial += str("rotate([90,0," + str(degrees) +"])translate([0, 0, -" + str(webRadius) + "])linear_extrude(height = " + str(webRadius) + ")circle(r = " + str(radialRadius) + ");\n")
-        j += 1
-        degrees += degreesInitial
+        a += 1
+        degrees += initialDegrees
 
 # Spiral threads
-i = 0
+b = 0
 # Degrees calculations (used later to find triangle side lengths)
-spiralRotateDegrees = round((degreesInitial / 2), 2)
-sideDegrees = (180 - degreesInitial) / 2
-sideDegreesRad = math.radians(sideDegrees)
-mainDegrees = degreesInitial / 2
-mainDegreesRad = math.radians(mainDegrees)
-spiralDiagonal = 0
-degrees = decimal.Decimal(math.fabs((90 - spiralRotateDegrees) - degreesInitial)) # Used to get rotation angle
+sideAngleDegrees = (180 - initialDegrees) / 2
+halfMainAngleDegrees = round((initialDegrees / 2), 4)
+# Used to determine the next spiral length
 spiralDistance2 = initialSpiralDistance
 initialSpiralDistance2 = initialSpiralDistance
+# Determines how much each spiral thread must increase by to reach the desired spiral
 spiralDistanceIncrement = spiralDistance / radialQuantity
+spiralDiagonal = 0
 
-degrees = (90 - spiralRotateDegrees)
-while degrees > degreesInitial:
-    degrees = degrees - degreesInitial
-degreesInitialRotation = degrees
+# Defines initial degree rotation angle
+degrees = decimal.Decimal(math.fabs((90 - halfMainAngleDegrees) - initialDegrees)) # Used to get rotation angle
+degrees = (90 - halfMainAngleDegrees)
+while degrees > initialDegrees:
+    degrees = degrees - initialDegrees
+initialDegreesRotation = degrees
 
 
-spiralDistance3 = (spiralDistance + (spiralDistance / radialQuantity) / 2)
+spiralDistanceFinal = (spiralDistance + (spiralDistance / radialQuantity) / 2)
 q = 0
 w = 0 
 spiralIncrement2 = 0
-while i < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < webRadius:
+while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < webRadius:
     # Determine length of the spiral thread
 
-    spiralLength = round((((spiralDistance) * decimal.Decimal(math.sin(mainDegreesRad)))/decimal.Decimal(math.sin(sideDegreesRad))) * 2, 4)
+    spiralLength = round((((spiralDistance) * decimal.Decimal(math.sin(math.radians(halfMainAngleDegrees))))/decimal.Decimal(math.sin(math.radians(sideAngleDegrees)))) * 2, 4)
     if q == 0:
         spiralTranslate = (spiralLength / -2)
         # q is incremented later on, no need to do it here
@@ -159,7 +161,7 @@ while i < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
             spiralDistance2 += initialSpiralDistance
             spiralDistance2 *= spiralGeometricConstant
             
-        spiralLength2 = round(((spiralDistance2 * decimal.Decimal(math.sin(mainDegreesRad)))/decimal.Decimal(math.sin(sideDegreesRad))) * 2, 4)
+        spiralLength2 = round(((spiralDistance2 * decimal.Decimal(math.sin(math.radians(halfMainAngleDegrees))))/decimal.Decimal(math.sin(math.radians(sideAngleDegrees)))) * 2, 4)
         spiralDiagonal3 = decimal.Decimal(math.sqrt(((spiralLength2 / 2) ** 2) + spiralDistance2 ** 2))
 
         spiralIncrement = (spiralDiagonal3 - spiralDiagonal) / radialQuantity
@@ -169,46 +171,47 @@ while i < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
             spiralIncrement2 = spiralIncrement
 
         spiralDiagonal2 = decimal.Decimal(spiralDiagonal) + spiralIncrement2
-        spiralLength = round(math.sqrt(decimal.Decimal(spiralDiagonal ** 2) + spiralDiagonal2 ** 2 - (2 * spiralDiagonal * spiralDiagonal2 * decimal.Decimal(math.cos(math.radians(degreesInitial))))), 4)
+        spiralLength = round(math.sqrt(decimal.Decimal(spiralDiagonal ** 2) + spiralDiagonal2 ** 2 - (2 * spiralDiagonal * spiralDiagonal2 * decimal.Decimal(math.cos(math.radians(initialDegrees))))), 4)
         
         if q == 0:
             spiralTranslate += 1 - (decimal.Decimal(spiralLength) - spiralLengthInitial) / 2
             spiralTranslate = round(spiralTranslate, 4)
             q += 1
 
+            if radialQuantity > 12:
+                spiralTranslate -= decimal.Decimal(0.35)
+            elif radialQuantity > 9:
+                spiralTranslate -= decimal.Decimal(0.3)
+            elif radialQuantity > 7:
+                spiralTranslate -= decimal.Decimal(0.1)
+            elif radialQuantity > 5:
+                spiralTranslate -= decimal.Decimal(0.15)
+
         else:
             spiralTranslate -= ((decimal.Decimal(spiralLength)-decimal.Decimal(previousSpiralLength)) / 2)
             spiralTranslate = round(spiralTranslate, 4)
 
-        largeSideDegree = math.asin(decimal.Decimal(math.sin(math.radians(degreesInitial))) * decimal.Decimal(spiralDiagonal2) / decimal.Decimal(spiralLength))
+        largeSideDegree = math.asin(decimal.Decimal(math.sin(math.radians(initialDegrees))) * decimal.Decimal(spiralDiagonal2) / decimal.Decimal(spiralLength))
         largeSideDegree = round(decimal.Decimal(math.degrees(largeSideDegree)), 4)
         if degrees <= 360:
             if w == 0:
-                degrees = degrees - degreesInitialRotation + largeSideDegree
+                degrees = degrees - initialDegreesRotation + largeSideDegree
                 w += 1
             else:
-                degrees = largeSideDegree - (degreesInitial * w)
+                degrees = largeSideDegree - (initialDegrees * w)
                 w += 1
 
             #if x % 2 == 0:
-            initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistance3) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
-            '''else:
-                if degreesCalculated < 180:
-                    degreesCalculated += 180
-                    initial += str("rotate([90,0," + str(degreesCalculated) +"])translate([" + str(spiralDistance3) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
-                else:
-                    degreesCalculated -= 180
-                    initial += str("rotate([90,0," + str(degreesCalculated) +"])translate([" + str(spiralDistance3) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
-            '''
+            initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
 
-            spiralDistance3 += spiralDistanceIncrement
+            spiralDistanceFinal += spiralDistanceIncrement
             previousSpiralLength = spiralLength
             x += 1
-        # degrees = (90 - spiralRotateDegrees) - degreesInitial
+        # degrees = (90 - halfMainAngleDegrees) - initialDegrees
         spiralDiagonal = spiralDiagonal2
         k += 1
     
-    i += 1  
+    b += 1  
     if spiralSpacingType == "f":
         spiralDistance += initialSpiralDistance
     elif spiralSpacingType == "l":

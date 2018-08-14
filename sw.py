@@ -7,8 +7,9 @@ init()
 
 # Initial user information
 from colorama import Fore, Back, Style
-print(Fore.RED + Style.DIM + Back.WHITE + 'All measurments are in millimeters.\nAll output is saved to backupModel.bak\n')
-print(Style.RESET_ALL)
+print(Fore.WHITE + Style.BRIGHT + '\n\n***********************************' + Style.RESET_ALL)
+print(Fore.RED + Style.BRIGHT + 'All measurments are in millimeters.\nAll output is saved to backupModel.bak' + Style.RESET_ALL)
+print(Fore.WHITE + Style.BRIGHT + '***********************************\n' + Style.RESET_ALL)
 
 # General web structure input
 while True:
