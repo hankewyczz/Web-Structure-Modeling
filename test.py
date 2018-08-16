@@ -232,7 +232,6 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
 
             initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
 
-            print(spiralDistanceFinal)
             # Changes spiralDistance counting to be compatible w/ linear and geometric
             if r == radialQuantity and spiralSpacingType == "l":
                 spiralDistanceFinal += spiralDistanceIncrement / 2
@@ -262,7 +261,7 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
     elif spiralSpacingType == "g":
         spiralDistanceIncrement *= spiralGeometricConstant
         spiralDistanceFinal += spiralDistanceIncrement / 2
-   
+
 
 
 
