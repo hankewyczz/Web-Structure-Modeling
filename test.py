@@ -138,7 +138,7 @@ while degrees > initialDegrees:
 initialDegreesRotation = degrees
 
 
-spiralDistanceFinal = (spiralDistance + (spiralDistance / radialQuantity) / 2)
+spiralDistanceOriginal = (spiralDistance + (spiralDistance / radialQuantity) / 2)
 q = 0
 w = 0 
 d = 0
@@ -217,28 +217,46 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
 
         largeSideDegree = math.asin(decimal.Decimal(math.sin(math.radians(initialDegrees))) * decimal.Decimal(spiralDiagonal2) / decimal.Decimal(spiralLength))
         largeSideDegree = round(decimal.Decimal(math.degrees(largeSideDegree)), 4)
-        
+
         if degrees <= 360:
             if w == 0:
-
                 degrees = degrees - initialDegreesRotation + largeSideDegree
+                while degrees < 0:
+                    degrees += 360
                 w += 1
             else:
                 degrees = largeSideDegree - (initialDegrees * w)
+                while degrees < 0:
+                    degrees += 360
                 w += 1
 
-            #if x % 2 == 0:
-            ############print(spiralDistanceFinal)
+            spiralDistanceFinal = decimal.Decimal(round(spiralDiagonal * decimal.Decimal(math.sin(math.radians(largeSideDegree))), 4))
 
-            initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
+            degreeDifference = degrees - initialDegreesRotation
+            while degreeDifference > halfMainAngleDegrees:
+                degreeDifference -= halfMainAngleDegrees
+
+            spiralTranslateInitialDifference = decimal.Decimal(math.sqrt(spiralDistanceFinal ** 2 + spiralDistanceOriginal ** 2 - 2*spiralDistanceFinal*spiralDistanceOriginal*decimal.Decimal(math.cos(math.radians(degreeDifference)))))
+
+
+            spiralTranslate2 = decimal.Decimal(spiralTranslateInitialDifference * 2)
+            spiralTranslate2 -= decimal.Decimal(spiralLength) / 2
+            spiralTranslate2 = round(spiralTranslate2, 4)
+
+
+            initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate2) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
 
             # Changes spiralDistance counting to be compatible w/ linear and geometric
+
+
             if r == radialQuantity and spiralSpacingType == "l":
-                spiralDistanceFinal += spiralDistanceIncrement / 2
+                spiralDistanceOriginal += spiralDistanceIncrement / 2
             elif r == radialQuantity and spiralSpacingType == "g":
-                spiralDistanceFinal += spiralDistanceIncrement / 2
+                spiralDistanceOriginal += spiralDistanceIncrement / 2
             else:
-                spiralDistanceFinal += spiralDistanceIncrement
+                spiralDistanceOriginal += spiralDistanceIncrement
+
+
             r += 1
 
             
@@ -253,14 +271,14 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
         spiralDiagonal = spiralDiagonal2
 
         k += 1
-
+ 
     if spiralSpacingType == "l":
         spiralDistanceIncrement += spiralLinearConstant / radialQuantity
-        spiralDistanceFinal += spiralDistanceIncrement / 2
+        spiralDistanceOriginal += spiralDistanceIncrement / 2
 
     elif spiralSpacingType == "g":
         spiralDistanceIncrement *= spiralGeometricConstant
-        spiralDistanceFinal += spiralDistanceIncrement / 2
+        spiralDistanceOriginal += spiralDistanceIncrement / 2
 
 
 
