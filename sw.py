@@ -27,7 +27,7 @@ if quickTest == "enabled":
     webRadius = dec(100)
     radialQuantity = dec(5)
     radialRadius = round(dec(.1), 1)
-    spiralQuantity = dec(40)
+    spiralQuantity = dec(40) 
     spiralRadius = round(dec(.1), 1)
     initialSpiralDistance = round(dec(4), 1)
     spiralSpacingType = "g"
