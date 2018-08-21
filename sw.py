@@ -22,17 +22,17 @@ print(Fore.RED + Style.BRIGHT + 'All measurments are in millimeters.\nAll output
 print(Fore.WHITE + Style.BRIGHT + '***********************************\n' + Style.RESET_ALL)
 
 # For user customizability, set quickTest to anything but "enabled" or "random"
-quickTest = "enabledNOT"
+quickTest = "enabled!"
 if quickTest == "enabled":
-    webRadius = dec(20)
+    webRadius = dec(100)
     radialQuantity = dec(5)
     radialRadius = round(dec(.1), 1)
-    spiralQuantity = dec(2)
+    spiralQuantity = dec(40)
     spiralRadius = round(dec(.1), 1)
     initialSpiralDistance = round(dec(4), 1)
     spiralSpacingType = "g"
     spiralLinearConstant = round(dec(4), 1)
-    spiralGeometricConstant = round(dec(1.1), 2)
+    spiralGeometricConstant = round(dec(1.4), 2)
 
 elif quickTest == "random":
     webRadius = dec(randint(20, 100))
@@ -256,18 +256,15 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
             
             if spiralSpacingType == "g":
                 spiralTranslate2ndDifference = dec(math.sqrt((2 * spiralDistanceFinal ** 2) - 2*spiralDistanceFinal*spiralDistanceFinal*dec(math.cos(rad(degreeDifference)))))
-                spiralTranslate3rdDifference = dec((spiralDistanceOriginalShortened * dec(sin(rad(sideAngleDegrees)))) / dec(sin(rad(180 - sideAngleDegrees - degreeDifference))))
-                spiralTranslate3rdDifference = spiralTranslate3rdDifference - spiralDistanceOriginalShortened
+                spiralTranslate3rdDifference = dec((spiralLengthOriginalSegment * dec(sin(rad(sideAngleDegrees)))) / dec(sin(rad(180 - sideAngleDegrees - degreeDifference))))
+                spiralTranslate3rdDifference = spiralTranslate3rdDifference - spiralLengthOriginalSegment
                 spiralTranslate2 = round(spiralTranslate2ndDifference - spiralTranslate3rdDifference, 4)
             else:
                 spiralTranslate2ndDifference = (spiralDistanceFinal * dec(sin(rad(degreeDifference))) / dec(sin(rad(spiralTranslate3rdDegree))))
                 spiralTranslate3rdDifference = (spiralDistanceOriginal - spiralDistanceOriginalShortened) / dec(sin(rad(degreeDifference)))
                 spiralTranslate2 = round(spiralTranslate2ndDifference + spiralTranslate3rdDifference, 4)  
 
-
-             
             spiralTranslate2 -= round(dec(spiralLength) / 2, 4)
-
 
 
             initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate2) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
