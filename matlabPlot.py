@@ -5,7 +5,7 @@ import numpy as np
 import pyperclip
 from decimal import Decimal as dec
 
-f = open('C:/Users/Zachar/Documents/MATLAB/intact8_length_400.xyz', 'r')
+f = open('C:/Users/Zachar/Documents/MATLAB/matlab.xyz', 'r')
 
 lines = f.readlines()
 lines = lines[2:]
@@ -25,11 +25,10 @@ y = [v for i, v in enumerate(y) if i % 3 == 1]
 z = [v for i, v in enumerate(z) if i % 3 == 2]
 
 
-
+# This is a really bad way of doing this, but whatever 
 x = str(x)
 y = str(y)
 z = str(z)
-
 x = x.replace("', '", " ")
 x = x.replace("'", "")
 x = x.replace("[", "")
@@ -42,7 +41,6 @@ z = z.replace("', '", " ")
 z = z.replace("'", "")
 z = z.replace("[", "")
 z = z.replace("]", "")
-
 x = x.split()
 y = y.split()
 z = z.split()
@@ -53,6 +51,7 @@ z = [float(i) for i in z]
 
 
 fig = plt.figure()
+
 ax = fig.gca(projection='3d')
 ax.scatter(x, y, z)
 plt.show()

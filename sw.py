@@ -21,7 +21,7 @@ init()
 # Initial user information
 from colorama import Fore, Back, Style
 print(Fore.WHITE + Style.BRIGHT + '\n\n***********************************' + Style.RESET_ALL)
-print(Fore.RED + Style.BRIGHT + 'All measurments are in millimeters.\nAll output is saved to backupModel.bak' + Style.RESET_ALL)
+print(Fore.RED + Style.BRIGHT + 'All measurments are in millimeters.' + Style.RESET_ALL)
 print(Fore.WHITE + Style.BRIGHT + '***********************************\n' + Style.RESET_ALL)
 
 # For user customizability, set quickTest to anything but "enabled" or "random"
@@ -330,12 +330,8 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
 
 # File save + clipboard copy
 pyperclip.copy(initial)
-file = open("backupModel.bak", "a+")
-file.write("\n\n\n\n" + str(datetime.datetime.now()) + "\n")
-file.write(initial)
-file.close()
 
-# Additional info
+
 saveas = input("Would you like to save your output as a .scad file? (y/n): ")
 if saveas == "y" or saveas == "Y":
     saveas_name = input("What would you like to save your output as? (filename): ")
