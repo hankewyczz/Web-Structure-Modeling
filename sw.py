@@ -10,8 +10,11 @@ from random import randint
 import pyperclip
 import datetime
 import math
-from math import sin as sin
+from math import sin
+from math import cos
 from math import radians as rad
+from math import sqrt
+
 import time
 from colorama import init
 init()
@@ -182,7 +185,7 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
         q += 1
         spiralLengthInitial = spiralLength
         previousSpiralLength = spiralLength
-        spiralDiagonal = round(dec(math.sqrt(((spiralLength / 2) ** 2 + spiralDistance ** 2))), 4)
+        spiralDiagonal = round(dec(sqrt(((spiralLength / 2) ** 2 + spiralDistance ** 2))), 4)
 
     
     # defining arbitrary variables used only for incrementing
@@ -205,7 +208,7 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
                 
             spiralLength2 = round(((spiralDistance2 * dec(sin(rad(halfMainAngleDegrees))))/dec(sin(rad(sideAngleDegrees)))) * 2, 4)
         
-            spiralDiagonalNextLevel = dec(math.sqrt(((spiralLength2 / 2) ** 2) + spiralDistance2 ** 2))
+            spiralDiagonalNextLevel = dec(sqrt(((spiralLength2 / 2) ** 2) + spiralDistance2 ** 2))
 
             try:
                 previousSpiralDiagonalNextLevel
@@ -220,7 +223,7 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
         spiralDiagonal2 = round(dec(spiralDiagonal) + spiralIncrement, 4)
 
 
-        spiralLength = round(dec(math.sqrt(dec(spiralDiagonal ** 2) + spiralDiagonal2 ** 2 - (2 * spiralDiagonal * spiralDiagonal2 * dec(math.cos(rad(initialDegrees)))))), 4)
+        spiralLength = round(dec(sqrt(dec(spiralDiagonal ** 2) + spiralDiagonal2 ** 2 - (2 * spiralDiagonal * spiralDiagonal2 * dec(cos(rad(initialDegrees)))))), 4)
 
         
 
@@ -250,12 +253,12 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
             spiralLengthOriginal = 2 * round((spiralDistanceFinal*dec(sin(rad(halfMainAngleDegrees))))/dec(sin(rad(sideAngleDegrees))), 4)
             spiralLengthOriginalSegment = (dec(sin(rad(halfMainAngleDegrees-degreeDifference/2)))*spiralDistanceFinal)/dec(sin(rad(sideAngleDegrees)))
 
-            spiralTranslateInitialDifference = round(dec(math.sqrt(spiralDistanceFinal ** 2 + spiralDistanceOriginal ** 2 - 2*spiralDistanceFinal*spiralDistanceOriginal*dec(math.cos(rad(degreeDifference))))), 4)
+            spiralTranslateInitialDifference = round(dec(sqrt(spiralDistanceFinal ** 2 + spiralDistanceOriginal ** 2 - 2*spiralDistanceFinal*spiralDistanceOriginal*dec(cos(rad(degreeDifference))))), 4)
             spiralTranslate3rdDegree = 90 - degreeDifference
             spiralDistanceOriginalShortened = spiralDistanceFinal / dec(sin(rad(spiralTranslate3rdDegree)))
             
             if spiralSpacingType == "g":
-                spiralTranslate2ndDifference = dec(math.sqrt((2 * spiralDistanceFinal ** 2) - 2*spiralDistanceFinal*spiralDistanceFinal*dec(math.cos(rad(degreeDifference)))))
+                spiralTranslate2ndDifference = dec(sqrt((2 * spiralDistanceFinal ** 2) - 2*spiralDistanceFinal*spiralDistanceFinal*dec(cos(rad(degreeDifference)))))
                 spiralTranslate3rdDifference = dec((spiralLengthOriginalSegment * dec(sin(rad(sideAngleDegrees)))) / dec(sin(rad(180 - sideAngleDegrees - degreeDifference))))
                 spiralTranslate3rdDifference = spiralTranslate3rdDifference - spiralLengthOriginalSegment
                 spiralTranslate2 = round(spiralTranslate2ndDifference - spiralTranslate3rdDifference, 4)
@@ -266,6 +269,13 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
 
             spiralTranslate2 -= round(dec(spiralLength) / 2, 4)
 
+            '''
+            spiralZIndex = radialRadius + spiralRadius
+            # Final changes to make the spiral threads overlap
+            spiralSpaceGap = round(dec((sqrt(2 * spiralRadius ** 2 - 2*spiralRadius*spiralRadius*dec(cos(rad(initialDegrees)))))/2), 4)
+            spiralLength += spiralSpaceGap
+            spiralTranslate -= 2*spiralSpaceGap
+            '''
 
             initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate2) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
 

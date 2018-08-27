@@ -4,10 +4,18 @@
 ##  This could could be the basis for a book called "Poor Python Practices" ##
 ##############################################################################
 
-import decimal
+from decimal import Decimal as dec
+import random
+from random import randint
 import pyperclip
 import datetime
 import math
+from math import sin
+from math import cos
+from math import radians as rad
+from math import sqrt
+
+import time
 from colorama import init
 init()
 # Initial user information
@@ -16,92 +24,116 @@ print(Fore.WHITE + Style.BRIGHT + '\n\n***********************************' + St
 print(Fore.RED + Style.BRIGHT + 'All measurments are in millimeters.\nAll output is saved to backupModel.bak' + Style.RESET_ALL)
 print(Fore.WHITE + Style.BRIGHT + '***********************************\n' + Style.RESET_ALL)
 
-# General web structure input (Overall radius)
-while True:
-    try:
-        webRadius = decimal.Decimal(input("Radius of the web structure (max radius): "))
-        while webRadius <= 1:
+# For user customizability, set quickTest to anything but "enabled" or "random"
+quickTest = "enabled!"
+if quickTest == "enabled":
+    webRadius = dec(100)
+    radialQuantity = dec(5)
+    radialRadius = round(dec(.1), 1)
+    spiralQuantity = dec(40) 
+    spiralRadius = round(dec(.1), 1)
+    initialSpiralDistance = round(dec(4), 1)
+    spiralSpacingType = "g"
+    spiralLinearConstant = round(dec(4), 1)
+    spiralGeometricConstant = round(dec(1.4), 2)
+
+elif quickTest == "random":
+    webRadius = dec(randint(20, 100))
+    radialQuantity = dec(randint(2, 30))
+    radialRadius = dec(random.random())
+    spiralQuantity = dec(randint(1, 100))
+    spiralRadius = radialRadius
+    initialSpiralDistance = dec(randint(1, 20))
+    spiralSpacingType = "g"
+    spiralLinearConstant = dec(randint(1, 15))
+    spiralGeometricConstant = dec(random.random() + randint(0,1))
+else:
+    # General web structure input (Overall radius)
+    while True:
+        try:
+            webRadius = dec(input("Radius of the web structure (max radius): "))
+            while webRadius <= 1:
+                print("Invalid input, please try again (must be a positive rational number)")
+                webRadius = dec(input("Radius of the web structure (max radius): "))
+            break
+        except:
+                print("Invalid input, please try again (must be a positive rational number)")
+        
+    # Radial thread input (Quantity and radius)
+    while True:
+        try:
+            radialQuantity = dec(input("Number of radial threads: "))
+            while radialQuantity <  0:
+                print("Invalid input, please try again (must be a positive rational number)")
+                radialQuantity = dec(input("Number of radial threads: "))
+            break
+        except:
             print("Invalid input, please try again (must be a positive rational number)")
-            webRadius = decimal.Decimal(input("Radius of the web structure (max radius): "))
-        break
-    except:
+    while True:
+        try:
+            radialRadius = dec(input("Radius of radial threads: "))
+            while radialRadius <=  0:
+                print("Invalid input, please try again (must be a positive rational number)")
+                radialRadius = dec(input("Radius of radial threads: "))
+            break
+        except:
+            print("Invalid input, please try again (must be a positive rational number)")
+
+    # Spiral thread input (Quantity, radius, and spacing)
+    while True:
+        try:
+            spiralQuantity = dec(input("Desired number of spiral threads: "))
+            while spiralQuantity < 0:
+                print("Invalid input, please try again (must be a positive rational number)")
+                spiralQuantity = dec(input("Desired number of spiral threads: "))
+            break
+        except:
+            prdec("Invalid input, please try again (must be a positive rational number)")
+    while True:
+        try:
+            spiralRadius = dec(input("Desired radius of spiral threads: "))
+            while spiralRadius <= 0:
+                print("Invalid input, please try again (must be a positive rational number)")
+                spiralRadius = dec(input("Desired radius of spiral threads: "))
+            break
+        except:
+            print("Invalid input, please try again (must be a positive rational number)")
+    while True:
+        try:
+            initialSpiralDistance = dec(input("Base distance between spiral threads: "))
+            while initialSpiralDistance <= 0:
+                print("Invalid input, please try again (must be a positive rational number)")
+                initialSpiralDistance = dec(input("Base distance between spiral threads: "))
+            break
+        except:
             print("Invalid input, please try again (must be a positive rational number)")
     
-# Radial thread input (Quantity and radius)
-while True:
-    try:
-        radialQuantity = decimal.Decimal(input("Number of radial threads: "))
-        while radialQuantity <  0:
-            print("Invalid input, please try again (must be a positive rational number)")
-            radialQuantity = decimal.Decimal(input("Number of radial threads: "))
-        break
-    except:
-        print("Invalid input, please try again (must be a positive rational number)")
-while True:
-    try:
-        radialRadius = decimal.Decimal(input("Radius of radial threads: "))
-        while radialRadius <=  0:
-            print("Invalid input, please try again (must be a positive rational number)")
-            radialRadius = decimal.Decimal(input("Radius of radial threads: "))
-        break
-    except:
-        print("Invalid input, please try again (must be a positive rational number)")
 
-# Spiral thread input (Quantity, radius, and spacing)
-while True:
-    try:
-        spiralQuantity = decimal.Decimal(input("Desired number of spiral threads: "))
-        while spiralQuantity < 0:
-            print("Invalid input, please try again (must be a positive rational number)")
-            spiralQuantity = decimal.Decimal(input("Desired number of spiral threads: "))
-        break
-    except:
-        prdecimal.Decimal("Invalid input, please try again (must be a positive rational number)")
-while True:
-    try:
-        spiralRadius = decimal.Decimal(input("Desired radius of spiral threads: "))
-        while spiralRadius <= 0:
-            print("Invalid input, please try again (must be a positive rational number)")
-            spiralRadius = decimal.Decimal(input("Desired radius of spiral threads: "))
-        break
-    except:
-        print("Invalid input, please try again (must be a positive rational number)")
-while True:
-    try:
-        initialSpiralDistance = decimal.Decimal(input("Base distance between spiral threads: "))
-        while initialSpiralDistance <= 0:
-            print("Invalid input, please try again (must be a positive rational number)")
-            initialSpiralDistance = decimal.Decimal(input("Base distance between spiral threads: "))
-        break
-    except:
-        print("Invalid input, please try again (must be a positive rational number)")
-spiralDistance = initialSpiralDistance
-
-# Spacing types
-spiralSpacingType = input("Is the spiral thread spacing fixed, linear, or geometric? (Respond f, l, or g): ")
-while spiralSpacingType != "f" and spiralSpacingType != "l" and spiralSpacingType != "g":
-    print("Invalid response.")
+    # Spacing types
     spiralSpacingType = input("Is the spiral thread spacing fixed, linear, or geometric? (Respond f, l, or g): ")
+    while spiralSpacingType != "f" and spiralSpacingType != "l" and spiralSpacingType != "g":
+        print("Invalid response.")
+        spiralSpacingType = input("Is the spiral thread spacing fixed, linear, or geometric? (Respond f, l, or g): ")
 
-# Spacing type-specific questions
-if spiralSpacingType == "l":
-    while True:
-        try:
-            spiralLinearConstant = decimal.Decimal(input("Linear constant (by what constant will the distance linearly increase?: "))
-            break
-        except:
-            print("Invalid input, please try again (must be a positive rational number)")
-elif spiralSpacingType == "g":
-    while True:
-        try:
-            spiralGeometricConstant = decimal.Decimal(input("Geometric ratio: "))
-            while spiralGeometricConstant <= 0:
+    # Spacing type-specific questions
+    if spiralSpacingType == "l":
+        while True:
+            try:
+                spiralLinearConstant = dec(input("Linear constant (by what constant will the distance linearly increase?: "))
+                break
+            except:
                 print("Invalid input, please try again (must be a positive rational number)")
-                spiralGeometricConstant = decimal.Decimal(input("Geometric ratio:" ))
-            break
-        except:
-            print("Invalid input, please try again (must be a positive rational number)")
-
+    elif spiralSpacingType == "g":
+        while True:
+            try:
+                spiralGeometricConstant = dec(input("Geometric ratio: "))
+                while spiralGeometricConstant <= 0:
+                    print("Invalid input, please try again (must be a positive rational number)")
+                    spiralGeometricConstant = dec(input("Geometric ratio:" ))
+                break
+            except:
+                print("Invalid input, please try again (must be a positive rational number)")
+spiralDistance = initialSpiralDistance
 # Initializes the output by defining the number of fragments (quality of the model. Lower is faster, higher is more defined)
 initial = "$fn=30;\n"
 
@@ -131,14 +163,14 @@ spiralDistanceIncrement = spiralDistance / radialQuantity
 spiralDiagonal = 0
 
 # Defines initial degree rotation angle
-degrees = decimal.Decimal(math.fabs((90 - halfMainAngleDegrees) - initialDegrees)) # Used to get rotation angle
+degrees = dec(math.fabs((90 - halfMainAngleDegrees) - initialDegrees)) # Used to get rotation angle
 degrees = (90 - halfMainAngleDegrees)
 while degrees > initialDegrees:
     degrees = degrees - initialDegrees
 initialDegreesRotation = degrees
 
 
-spiralDistanceFinal = (spiralDistance + (spiralDistance / radialQuantity) / 2)
+spiralDistanceOriginal = (spiralDistance + (spiralDistance / radialQuantity) / 2)
 q = 0
 w = 0 
 d = 0
@@ -146,14 +178,14 @@ d = 0
 spiralIncrement = 0
 while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < webRadius:
     # Determine length of the spiral thread
-    spiralLength = round((((spiralDistance) * decimal.Decimal(math.sin(math.radians(halfMainAngleDegrees))))/decimal.Decimal(math.sin(math.radians(sideAngleDegrees)))) * 2, 4)
+    spiralLength = round((((spiralDistance) * dec(sin(rad(halfMainAngleDegrees))))/dec(sin(rad(sideAngleDegrees)))) * 2, 4)
     
     if q == 0:
         spiralTranslate = (spiralLength / -2)
-        # q is incremented later on, no need to do it here
+        q += 1
         spiralLengthInitial = spiralLength
         previousSpiralLength = spiralLength
-        spiralDiagonal = decimal.Decimal(math.sqrt(((spiralLength / 2) ** 2 + spiralDistance ** 2)))
+        spiralDiagonal = round(dec(sqrt(((spiralLength / 2) ** 2 + spiralDistance ** 2))), 4)
 
     
     # defining arbitrary variables used only for incrementing
@@ -174,9 +206,9 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
                 spiralDistance2 += initialSpiralDistance
                 spiralDistance2 *= spiralGeometricConstant
                 
-            spiralLength2 = round(((spiralDistance2 * decimal.Decimal(math.sin(math.radians(halfMainAngleDegrees))))/decimal.Decimal(math.sin(math.radians(sideAngleDegrees)))) * 2, 4)
+            spiralLength2 = round(((spiralDistance2 * dec(sin(rad(halfMainAngleDegrees))))/dec(sin(rad(sideAngleDegrees)))) * 2, 4)
         
-            spiralDiagonalNextLevel = decimal.Decimal(math.sqrt(((spiralLength2 / 2) ** 2) + spiralDistance2 ** 2))
+            spiralDiagonalNextLevel = dec(sqrt(((spiralLength2 / 2) ** 2) + spiralDistance2 ** 2))
 
             try:
                 previousSpiralDiagonalNextLevel
@@ -185,61 +217,77 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
             else:
                 spiralIncrement = (spiralDiagonalNextLevel - previousSpiralDiagonalNextLevel) / radialQuantity
 
+
             previousSpiralDiagonalNextLevel = spiralDiagonalNextLevel
 
-        spiralDiagonal2 = decimal.Decimal(spiralDiagonal) + spiralIncrement
+        spiralDiagonal2 = round(dec(spiralDiagonal) + spiralIncrement, 4)
 
 
-        spiralLength = round(math.sqrt(decimal.Decimal(spiralDiagonal ** 2) + spiralDiagonal2 ** 2 - (2 * spiralDiagonal * spiralDiagonal2 * decimal.Decimal(math.cos(math.radians(initialDegrees))))), 4)
-        
-        # VERY hacky solution. Ignore for now. Traffic fines double in work zones.
+        spiralLength = round(dec(sqrt(dec(spiralDiagonal ** 2) + spiralDiagonal2 ** 2 - (2 * spiralDiagonal * spiralDiagonal2 * dec(cos(rad(initialDegrees)))))), 4)
 
-        if q == 0:
-            spiralTranslate += 1 - (decimal.Decimal(spiralLength) - spiralLengthInitial) / 2
-            q += 1
-            if initialSpiralDistance > 6:
-                spiralTranslate += decimal.Decimal(0.66) * (decimal.Decimal(initialSpiralDistance / 4) - 1)
-            if radialQuantity > 12:
-                spiralTranslate -= decimal.Decimal(0.35)
-            elif radialQuantity > 9:
-                spiralTranslate -= decimal.Decimal(0.3)
-            elif radialQuantity > 7:
-                spiralTranslate -= decimal.Decimal(0.1)
-            elif radialQuantity > 5:
-                spiralTranslate -= decimal.Decimal(0.15)
-
-        else:
-            spiralTranslate -= ((decimal.Decimal(spiralLength)-decimal.Decimal(previousSpiralLength)) / 2)
-        spiralTranslate = round(spiralTranslate, 4)   
-        
-        # End hacky solution zone. 
         
 
-        largeSideDegree = math.asin(decimal.Decimal(math.sin(math.radians(initialDegrees))) * decimal.Decimal(spiralDiagonal2) / decimal.Decimal(spiralLength))
-        largeSideDegree = round(decimal.Decimal(math.degrees(largeSideDegree)), 4)
-        
+        largeSideDegree = math.asin(dec(sin(rad(initialDegrees))) * dec(spiralDiagonal2) / dec(spiralLength))
+        largeSideDegree = round(dec(math.degrees(largeSideDegree)), 4)
+
         if degrees <= 360:
             if w == 0:
-
                 degrees = degrees - initialDegreesRotation + largeSideDegree
+                while degrees < 0:
+                    degrees += 360
                 w += 1
             else:
                 degrees = largeSideDegree - (initialDegrees * w)
+                while degrees < 0:
+                    degrees += 360
                 w += 1
 
-            #if x % 2 == 0:
-            ############print(spiralDistanceFinal)
 
-            initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
+            spiralDistanceFinal = dec(round(spiralDiagonal * dec(sin(rad(largeSideDegree))), 4))
 
-            print(spiralDistanceFinal)
-            # Changes spiralDistance counting to be compatible w/ linear and geometric
-            if r == radialQuantity and spiralSpacingType == "l":
-                spiralDistanceFinal += spiralDistanceIncrement / 2
-            elif r == radialQuantity and spiralSpacingType == "g":
-                spiralDistanceFinal += spiralDistanceIncrement / 2
+            degreeDifference = degrees - initialDegreesRotation
+            while degreeDifference > halfMainAngleDegrees:
+                degreeDifference -= halfMainAngleDegrees
+
+           
+            spiralLengthOriginal = 2 * round((spiralDistanceFinal*dec(sin(rad(halfMainAngleDegrees))))/dec(sin(rad(sideAngleDegrees))), 4)
+            spiralLengthOriginalSegment = (dec(sin(rad(halfMainAngleDegrees-degreeDifference/2)))*spiralDistanceFinal)/dec(sin(rad(sideAngleDegrees)))
+
+            spiralTranslateInitialDifference = round(dec(sqrt(spiralDistanceFinal ** 2 + spiralDistanceOriginal ** 2 - 2*spiralDistanceFinal*spiralDistanceOriginal*dec(cos(rad(degreeDifference))))), 4)
+            spiralTranslate3rdDegree = 90 - degreeDifference
+            spiralDistanceOriginalShortened = spiralDistanceFinal / dec(sin(rad(spiralTranslate3rdDegree)))
+            
+            if spiralSpacingType == "g":
+                spiralTranslate2ndDifference = dec(sqrt((2 * spiralDistanceFinal ** 2) - 2*spiralDistanceFinal*spiralDistanceFinal*dec(cos(rad(degreeDifference)))))
+                spiralTranslate3rdDifference = dec((spiralLengthOriginalSegment * dec(sin(rad(sideAngleDegrees)))) / dec(sin(rad(180 - sideAngleDegrees - degreeDifference))))
+                spiralTranslate3rdDifference = spiralTranslate3rdDifference - spiralLengthOriginalSegment
+                spiralTranslate2 = round(spiralTranslate2ndDifference - spiralTranslate3rdDifference, 4)
             else:
-                spiralDistanceFinal += spiralDistanceIncrement
+                spiralTranslate2ndDifference = (spiralDistanceFinal * dec(sin(rad(degreeDifference))) / dec(sin(rad(spiralTranslate3rdDegree))))
+                spiralTranslate3rdDifference = (spiralDistanceOriginal - spiralDistanceOriginalShortened) / dec(sin(rad(degreeDifference)))
+                spiralTranslate2 = round(spiralTranslate2ndDifference + spiralTranslate3rdDifference, 4)  
+
+            spiralTranslate2 -= round(dec(spiralLength) / 2, 4)
+
+            '''
+            spiralZIndex = radialRadius + spiralRadius
+            # Final changes to make the spiral threads overlap
+            spiralSpaceGap = round(dec((sqrt(2 * spiralRadius ** 2 - 2*spiralRadius*spiralRadius*dec(cos(rad(initialDegrees)))))/2), 4)
+            spiralLength += spiralSpaceGap
+            spiralTranslate -= 2*spiralSpaceGap
+            '''
+
+            initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate2) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
+
+            # Changes spiralDistance counting to be compatible w/ linear and geometric
+
+
+            if r == radialQuantity and spiralSpacingType == "l":
+                spiralDistanceOriginal += spiralDistanceIncrement / 2
+            elif r == radialQuantity and spiralSpacingType == "g":
+                spiralDistanceOriginal += spiralDistanceIncrement / 2
+            else:
+                spiralDistanceOriginal += spiralDistanceIncrement
             r += 1
 
             
@@ -254,15 +302,16 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
         spiralDiagonal = spiralDiagonal2
 
         k += 1
-
+ 
     if spiralSpacingType == "l":
         spiralDistanceIncrement += spiralLinearConstant / radialQuantity
-        spiralDistanceFinal += spiralDistanceIncrement / 2
+        spiralDistanceOriginal += spiralDistanceIncrement / 2
 
     elif spiralSpacingType == "g":
         spiralDistanceIncrement *= spiralGeometricConstant
-        spiralDistanceFinal += spiralDistanceIncrement / 2
-   
+        spiralDistanceOriginal += spiralDistanceIncrement / 2
+
+
 
 
 
@@ -275,6 +324,7 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
     elif spiralSpacingType == "g":
         spiralDistance += initialSpiralDistance
         spiralDistance *= spiralGeometricConstant
+
     
 
 
@@ -295,3 +345,4 @@ if saveas == "y" or saveas == "Y":
     file_saveas = open(saveas_name, "w+")
     file_saveas.write(initial)
     file_saveas.close()
+## FIN ## 
