@@ -1,31 +1,27 @@
-##############################################################################
-##  Zachar Hankewycz, 2018                                                  ##
-##  If you plan on editing this, may God have mercy on your soul            ##
-##  This could could be the basis for a book called "Poor Python Practices" ##
-##############################################################################
+##############################
+##  Zachar Hankewycz, 2018  ##
+##############################
 
 from decimal import Decimal as dec
-import random
 from random import randint
-import pyperclip
-import datetime
-import math
 from math import sin
 from math import cos
 from math import radians as rad
 from math import sqrt
-
-import time
 from colorama import init
-init()
-# Initial user information
 from colorama import Fore, Back, Style
+import random
+import pyperclip
+import math
+
+# Initial user information
+init() #colorama init
 print(Fore.WHITE + Style.BRIGHT + '\n\n***********************************' + Style.RESET_ALL)
 print(Fore.RED + Style.BRIGHT + 'All measurments are in millimeters.' + Style.RESET_ALL)
 print(Fore.WHITE + Style.BRIGHT + '***********************************\n' + Style.RESET_ALL)
 
-# For user customizability, set quickTest to anything but "enabled" or "random"
-quickTest = "enabled!"
+# This section for testing only. quickTest should be set to anything but "enabled" or "test"
+quickTest = "!enabled"
 if quickTest == "enabled":
     webRadius = dec(100)
     radialQuantity = dec(5)
@@ -36,7 +32,6 @@ if quickTest == "enabled":
     spiralSpacingType = "g"
     spiralLinearConstant = round(dec(4), 1)
     spiralGeometricConstant = round(dec(1.4), 2)
-
 elif quickTest == "random":
     webRadius = dec(randint(20, 100))
     radialQuantity = dec(randint(2, 30))
@@ -48,6 +43,8 @@ elif quickTest == "random":
     spiralLinearConstant = dec(randint(1, 15))
     spiralGeometricConstant = dec(random.random() + randint(0,1))
 else:
+    # General use case (not a testing case)
+
     # General web structure input (Overall radius)
     while True:
         try:
@@ -88,7 +85,7 @@ else:
                 spiralQuantity = dec(input("Desired number of spiral threads: "))
             break
         except:
-            prdec("Invalid input, please try again (must be a positive rational number)")
+            print("Invalid input, please try again (must be a positive rational number)")
     while True:
         try:
             spiralRadius = dec(input("Desired radius of spiral threads: "))
@@ -108,7 +105,6 @@ else:
         except:
             print("Invalid input, please try again (must be a positive rational number)")
     
-
     # Spacing types
     spiralSpacingType = input("Is the spiral thread spacing fixed, linear, or geometric? (Respond f, l, or g): ")
     while spiralSpacingType != "f" and spiralSpacingType != "l" and spiralSpacingType != "g":
@@ -133,7 +129,8 @@ else:
                 break
             except:
                 print("Invalid input, please try again (must be a positive rational number)")
-spiralDistance = initialSpiralDistance
+
+
 # Initializes the output by defining the number of fragments (quality of the model. Lower is faster, higher is more defined)
 initial = "$fn=30;\n"
 
@@ -152,14 +149,13 @@ b = 0
 sideAngleDegrees = (180 - initialDegrees) / 2
 halfMainAngleDegrees = round((initialDegrees / 2), 4)
 # Used to determine the next spiral length
+spiralDistance = initialSpiralDistance
 spiralDistance2 = initialSpiralDistance
 initialSpiralDistance2 = initialSpiralDistance
 # Determines how much each spiral thread must increase by to reach the desired spiral
 
 # Could be done as an if statement
 spiralDistanceIncrement = spiralDistance / radialQuantity
-
-
 spiralDiagonal = 0
 
 # Defines initial degree rotation angle
@@ -187,7 +183,6 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
         previousSpiralLength = spiralLength
         spiralDiagonal = round(dec(sqrt(((spiralLength / 2) ** 2 + spiralDistance ** 2))), 4)
 
-    
     # defining arbitrary variables used only for incrementing
     # this is a terrible solution and there's got to be a much better way
     k = 0
@@ -280,8 +275,6 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
             initial += str("rotate([90,0," + str(degrees) +"])translate([" + str(spiralDistanceFinal) + ", 0, " + str(spiralTranslate2) + "])linear_extrude(height = " + str(spiralLength) + ")circle(r = " + str(spiralRadius) + ");\n")
 
             # Changes spiralDistance counting to be compatible w/ linear and geometric
-
-
             if r == radialQuantity and spiralSpacingType == "l":
                 spiralDistanceOriginal += spiralDistanceIncrement / 2
             elif r == radialQuantity and spiralSpacingType == "g":
@@ -289,18 +282,11 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
             else:
                 spiralDistanceOriginal += spiralDistanceIncrement
             r += 1
-
-            
-
-
-            #spiralDistanceIncrement = spiralDistance / radialQuantity
-
             previousSpiralLength = spiralLength
             x += 1
         
         # degrees = (90 - halfMainAngleDegrees) - initialDegrees
         spiralDiagonal = spiralDiagonal2
-
         k += 1
  
     if spiralSpacingType == "l":
@@ -311,10 +297,6 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
         spiralDistanceIncrement *= spiralGeometricConstant
         spiralDistanceOriginal += spiralDistanceIncrement / 2
 
-
-
-
-
     b += 1  
     if spiralSpacingType == "f":
         spiralDistance += initialSpiralDistance
@@ -324,9 +306,6 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
     elif spiralSpacingType == "g":
         spiralDistance += initialSpiralDistance
         spiralDistance *= spiralGeometricConstant
-
-    
-
 
 # File save + clipboard copy
 pyperclip.copy(initial)
