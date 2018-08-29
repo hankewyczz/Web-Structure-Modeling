@@ -1,6 +1,7 @@
 %%%matlab script for generating spider web geometry and lammps input file
-%%%Wroten by Zhao Qin 2013 @MIT
-%%%Double comments are 2018
+%%%Writen by Zhao Qin 2013 @MIT
+%%Modified by Zachar Hankewycz 2018 @MIT
+%%(Double comments are 2018)
 clear;
 
 dd=1; %Scale factor- do not use, use datascale or xyzfactor instead.
@@ -289,7 +290,6 @@ end
 
 
 %%XYZ output
-
 fprintf(fidwxyz,'%d \n',sizeatom(1));
 for i=1:sizeatom(1)
     fprintf(fidwxyz,'%d   %f   %f   %f\n',atom(i,6),atom(i,1)*xyzfactor,atom(i,2)*xyzfactor,atom(i,3)*xyzfactor);

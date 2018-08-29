@@ -54,7 +54,7 @@ else:
                 webRadius = dec(input("Radius of the web structure (max radius): "))
             break
         except:
-                print("Invalid input, please try again (must be a positive rational number)")
+            print("Invalid input, please try again (must be a positive rational number)")
         
     # Radial thread input (Quantity and radius)
     while True:
@@ -316,8 +316,17 @@ if saveas == "y" or saveas == "Y":
     saveas_name = input("What would you like to save your output as? (filename): ")
     if ".scad" not in saveas_name:
         saveas_name += ".scad"
-        print(saveas_name)
-    file_saveas = open(saveas_name, "w+")
-    file_saveas.write(initial)
-    file_saveas.close()
+    
+    file_saveas = None
+    while file_saveas is None:
+        try:
+            file_saveas = open(saveas_name, "w+")
+            file_saveas.write(initial)
+            file_saveas.close()
+            print("Saved as " + saveas_name)
+            break
+        except:
+            print("You may be trying to save the file to a protected directory. Please try running this script as an administrator.")
+            file_saveas = "loop breaker"
+
 ## FIN ## 
