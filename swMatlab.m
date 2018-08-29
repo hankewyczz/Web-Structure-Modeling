@@ -22,13 +22,6 @@ while isempty(webRadius) || webRadius < 1
 end
 webRadius = webRadius * 10; %%(10 = 1 unit)
 
-%Determines initial starting point (distance from center)
-initialSpiralSpacing = input('Distance from intitial thread to center: ');
-while isempty(initialSpiralSpacing) || initialSpiralSpacing < 0
-    disp(['Invalid input']);
-    initialSpiralSpacing = input('Distance from intitial thread to center: ');
-end
-initialSpiralSpacing = initialSpiralSpacing * 10; %%(10 = 1 unit);
 
 %%Scale factors- both should be used to scale models up/down. Each one only works for one file, has no cross-effect
 datascale=1; %Scale factor of the coordinates in the .data file
@@ -141,7 +134,7 @@ elseif spiralSpacingType == 'g'
     spiralGeometricConstant = input('Geometric constant: ');
 end
 
-r0=1+initialSpiralSpacing;
+r0=1+rincr*10; 
 for i=1:round
     %%once each radial thread level
     if i ~= 1
