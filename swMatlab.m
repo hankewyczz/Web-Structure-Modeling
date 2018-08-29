@@ -287,8 +287,6 @@ for i=1:sizeangle(1)
     fprintf(fidw,'     %d     %d     %d     %d     %d\n',i,angle(i,4),angle(i,1),angle(i,2),angle(i,3));
 end
 
-
-
 %%XYZ output
 fprintf(fidwxyz,'%d \n',sizeatom(1));
 for i=1:sizeatom(1)

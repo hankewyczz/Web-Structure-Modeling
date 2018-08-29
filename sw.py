@@ -167,6 +167,8 @@ initialDegreesRotation = degrees
 
 
 spiralDistanceOriginal = (spiralDistance + (spiralDistance / radialQuantity) / 2)
+# defining arbitrary variables used only for incrementing
+# this is a terrible solution and there's got to be a much better way
 q = 0
 w = 0 
 d = 0
@@ -182,9 +184,8 @@ while b < spiralQuantity and spiralDistance < webRadius and spiralDiagonal < web
         spiralLengthInitial = spiralLength
         previousSpiralLength = spiralLength
         spiralDiagonal = round(dec(sqrt(((spiralLength / 2) ** 2 + spiralDistance ** 2))), 4)
-
-    # defining arbitrary variables used only for incrementing
-    # this is a terrible solution and there's got to be a much better way
+    # EVEN MORE ARBITRARY VARIABLES
+    # seriously, this is a) hard to keep track of, and b) probably the literal worse way of doing this
     k = 0
     x = 0
     r = 1
